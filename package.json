@@ -6,8 +6,7 @@
   "scripts": {
     "build": "node scripts/build-diagrams.js",
     "clean": "rm -rf diagrams/build",
-    "watch": "node scripts/watch-diagrams.js",
-    "serve": "python -m http.server 8000 --directory diagrams/build"
+    "serve": "python3 -m http.server 8000 --directory diagrams/build"
   },
   "keywords": [
     "bpmn",
@@ -16,8 +15,5 @@
     "documentation"
   ],
   "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "chokidar": "^5.0.0"
-  }
+  "license": "MIT"
 }
