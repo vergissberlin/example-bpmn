@@ -1,26 +1,16 @@
 # 🔄 BPMN Flow Visualization – Alle 3 Prozesse
 
+> **Source:** PlantUML diagrams in [`diagrams/`](./diagrams/) directory  
+> **Build:** Run `make build` to generate SVGs → [`diagrams/build/`](./diagrams/build/)
+
+---
+
 ## 1️⃣ Onboarding-Prozess (onboard.bpmn)
 
-```plantuml
-@startuml
-start
-: Bewerber:in;
-: Create Ticket;
-fork
-  : Timer Catch;
-  : Message Catch;
-  : Ende (Path A);
-fork again
-  : Subprocess;
-  : Internal Task;
-  : Internal Timer;
-  : Internal Signal;
-  : Ende (Path B);
-end fork
-stop
-@enduml
-```
+**Source:** [`diagrams/onboarding.puml`](./diagrams/onboarding.puml)  
+**Generated SVG:** [`diagrams/build/Onboarding Process.svg`](./diagrams/build/Onboarding%20Process.svg)
+
+![Onboarding Process Diagram](./diagrams/build/Onboarding%20Process.svg)
 
 **Status:** ✅ **FLOW VALIDIERT & KORRIGIERT**
 
@@ -32,33 +22,10 @@ stop
 
 ## 2️⃣ Thinkport Sales-Prozess (thinkport-sales-prozess.bpmn)
 
-```plantuml
-@startuml
-start
-: Qualifizieren (Thinkport);
-if (Qualifiziert?) then (Ja)
-  : Angebot Erstellen;
-  : Angebot Versenden;
-  : Message: Angebot -> Kunde;
-  if (Kunde Angenommen?) then (Ja)
-    : Message: Auftrag <- Kunde;
-    : Vertrag Aufsetzen;
-    : Uebergabe;
-    : Kickoff Vorbereiten;
-    : Projekt Gestartet;
-    : Ende (Success);
-  else (Nein)
-    : Message: Ablehnung <- Kunde;
-    : Auftrag Verloren;
-    : Ende (Rejected);
-  endif
-else (Nein)
-  : Verworfen;
-  : Ende (Not Qualified);
-endif
-stop
-@enduml
-```
+**Source:** [`diagrams/sales.puml`](./diagrams/sales.puml)  
+**Generated SVG:** [`diagrams/build/Sales Process.svg`](./diagrams/build/Sales%20Process.svg)
+
+![Sales Process Diagram](./diagrams/build/Sales%20Process.svg)
 
 **Status:** ✅ **FLOW VALIDIERT**
 
@@ -70,33 +37,10 @@ stop
 
 ## 3️⃣ Thinkport Sales-Prozess (Sink-Variant, thinkport-sales-prozess-sink.bpmn)
 
-```plantuml
-@startuml
-start
-: Qualifizieren (Sink Variant);
-if (Qualifiziert?) then (Ja)
-  : Angebot Erstellen;
-  : Angebot Versenden;
-  : Message: Angebot -> Kunde;
-  if (Kunde Angenommen?) then (Ja)
-    : Message: Auftrag <- Kunde;
-    : Vertrag Aufsetzen;
-    : Uebergabe;
-    : Kickoff Vorbereiten;
-    : Projekt Gestartet;
-    : Ende (Success);
-  else (Nein)
-    : Message: Ablehnung <- Kunde;
-    : Auftrag Verloren;
-    : Ende (Rejected);
-  endif
-else (Nein)
-  : Verworfen;
-  : Ende (Not Qualified);
-endif
-stop
-@enduml
-```
+**Source:** [`diagrams/sink.puml`](./diagrams/sink.puml)  
+**Generated SVG:** [`diagrams/build/Sales Process Sink.svg`](./diagrams/build/Sales%20Process%20Sink.svg)
+
+![Sales Process Sink Diagram](./diagrams/build/Sales%20Process%20Sink.svg)
 
 **Status:** ✅ **IDENTISCH MIT VARIANT 2** (Test/Sink-Variant)
 

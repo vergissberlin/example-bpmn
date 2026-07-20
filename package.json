@@ -1,0 +1,23 @@
+{
+  "name": "bpmn-diagrams",
+  "version": "1.0.0",
+  "description": "BPMN Process Diagrams with PlantUML",
+  "packageManager": "pnpm@8.0.0",
+  "scripts": {
+    "build": "node scripts/build-diagrams.js",
+    "clean": "rm -rf diagrams/build",
+    "watch": "node scripts/watch-diagrams.js",
+    "serve": "python -m http.server 8000 --directory diagrams/build"
+  },
+  "keywords": [
+    "bpmn",
+    "plantuml",
+    "diagrams",
+    "documentation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chokidar": "^5.0.0"
+  }
+}

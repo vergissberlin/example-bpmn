@@ -1,0 +1,27 @@
+@startuml Sales Process Sink
+title Thinkport Sales-Prozess Sink-Variant (thinkport-sales-prozess-sink.bpmn)
+
+start
+: Qualifizieren (Sink Variant);
+if (Qualifiziert?) then (Ja)
+  : Angebot Erstellen;
+  : Angebot Versenden;
+  : Message: Angebot -> Kunde;
+  if (Kunde Angenommen?) then (Ja)
+    : Message: Auftrag <- Kunde;
+    : Vertrag Aufsetzen;
+    : Uebergabe;
+    : Kickoff Vorbereiten;
+    : Projekt Gestartet;
+    : Ende (Success);
+  else (Nein)
+    : Message: Ablehnung <- Kunde;
+    : Auftrag Verloren;
+    : Ende (Rejected);
+  endif
+else (Nein)
+  : Verworfen;
+  : Ende (Not Qualified);
+endif
+stop
+@enduml

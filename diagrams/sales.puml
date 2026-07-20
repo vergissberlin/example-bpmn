@@ -1,0 +1,27 @@
+@startuml Sales Process
+title Thinkport Sales-Prozess (thinkport-sales-prozess.bpmn)
+
+start
+: Qualifizieren (Thinkport);
+if (Qualifiziert?) then (Ja)
+  : Angebot Erstellen;
+  : Angebot Versenden;
+  : Message: Angebot -> Kunde;
+  if (Kunde Angenommen?) then (Ja)
+    : Message: Auftrag <- Kunde;
+    : Vertrag Aufsetzen;
+    : Uebergabe;
+    : Kickoff Vorbereiten;
+    : Projekt Gestartet;
+    : Ende (Success);
+  else (Nein)
+    : Message: Ablehnung <- Kunde;
+    : Auftrag Verloren;
+    : Ende (Rejected);
+  endif
+else (Nein)
+  : Verworfen;
+  : Ende (Not Qualified);
+endif
+stop
+@enduml

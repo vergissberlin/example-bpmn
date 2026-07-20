@@ -1,0 +1,19 @@
+@startuml Onboarding Process
+title Onboarding-Prozess (onboard.bpmn)
+
+start
+: Bewerber:in;
+: Create Ticket;
+fork
+  : Timer Catch;
+  : Message Catch;
+  : Ende (Path A);
+fork again
+  : Subprocess;
+  : Internal Task;
+  : Internal Timer;
+  : Internal Signal;
+  : Ende (Path B);
+end fork
+stop
+@enduml
