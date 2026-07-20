@@ -42,10 +42,12 @@ let errorCount = 0;
 pumlFiles.forEach(pumlFile => {
     const inputPath = path.join(DIAGRAMS_DIR, pumlFile);
     const filename = path.basename(pumlFile, '.puml');
-    const outputPath = path.join(OUTPUT_DIR, `${filename}.svg`);
     
     try {
         console.log(`  🔨 Processing: ${pumlFile}`);
+        
+        // Get SVG count before
+        const filesBefore = fs.readdirSync(OUTPUT_DIR).filter(f => f.endsWith('.svg'));
         
         // Try to use plantuml command
         try {
@@ -53,17 +55,30 @@ pumlFiles.forEach(pumlFile => {
                 stdio: 'pipe'
             });
             
-            if (fs.existsSync(outputPath)) {
-                const stats = fs.statSync(outputPath);
-                console.log(`  ✅ Generated: ${filename}.svg (${(stats.size / 1024).toFixed(2)} KB)`);
-                successCount++;
+            // Get SVG count after
+            const filesAfter = fs.readdirSync(OUTPUT_DIR).filter(f => f.endsWith('.svg'));
+            
+            // Check if a new SVG was created
+            if (filesAfter.length > filesBefore.length) {
+                // Find the newly created file
+                const newFiles = filesAfter.filter(f => !filesBefore.includes(f));
+                if (newFiles.length > 0) {
+                    const newFile = newFiles[0];
+                    const fullPath = path.join(OUTPUT_DIR, newFile);
+                    const stats = fs.statSync(fullPath);
+                    console.log(`  ✅ Generated: ${newFile} (${(stats.size / 1024).toFixed(2)} KB)`);
+                    successCount++;
+                } else {
+                    console.log(`  ⚠️  PlantUML executed but no new file detected`);
+                    errorCount++;
+                }
             } else {
-                console.log(`  ⚠️  PlantUML command executed but file not created`);
+                console.log(`  ⚠️  PlantUML command executed but no SVG file created`);
                 errorCount++;
             }
         } catch (e) {
             if (e.message.includes('ENOENT')) {
-                console.log(`  ❌ PlantUML CLI not found. Install with: npm install -g @jgraph/plantuml`);
+                console.log(`  ❌ PlantUML CLI not found. Install with: brew install plantuml`);
             } else {
                 console.log(`  ❌ Error: ${e.message}`);
             }
