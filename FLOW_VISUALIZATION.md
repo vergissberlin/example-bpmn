@@ -104,15 +104,15 @@ stop
 
 ## 📊 Zusammenfassung der Validierung
 
-| Datei | Prozess-Typ | Status | Aktionen |
-|-------|-------------|--------|----------|
-| **onboard.bpmn** | Single-Pool | ✅ KORRIGIERT | • Subprocess-Exit Flow hinzugefügt |
-| **thinkport-sales-prozess.bpmn** | Multi-Pool Collaboration | ✅ VALIDIERT | • Message Flows OK • Gateways OK |
-| **thinkport-sales-prozess-sink.bpmn** | Multi-Pool Collaboration | ✅ VALIDIERT | • Identisch mit Variant 2 |
+| Datei                                 | Prozess-Typ              | Status       | Aktionen                           |
+|---------------------------------------|--------------------------|--------------|------------------------------------|
+| **onboard.bpmn**                      | Single-Pool              | ✅ KORRIGIERT | • Subprocess-Exit Flow hinzugefügt|
+| **thinkport-sales-prozess.bpmn**      | Multi-Pool Collaboration | ✅ VALIDIERT  | • Message Flows OK • Gateways OK  |
+| **thinkport-sales-prozess-sink.bpmn** | Multi-Pool Collaboration | ✅ VALIDIERT  | • Identisch mit Variant 2         |
 
 ### ✅ Alle Flows funktionieren jetzt korrekt
 
-```
+```plaintext
 ✓ Alle sequenceFlows haben source & target
 ✓ Alle Message Flows verbinden Pools korrekt
 ✓ Beide Paths im onboard-Prozess führen zu Ende
