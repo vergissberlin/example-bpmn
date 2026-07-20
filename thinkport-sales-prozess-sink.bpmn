@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_Sales" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.16.0">
+  <bpmn:collaboration id="Collaboration_Sales">
+    <bpmn:participant id="Participant_Thinkport" name="Thinkport" processRef="Process_Thinkport" />
+    <bpmn:participant id="Participant_Kunde" name="Kunde" processRef="Process_Kunde" />
+    <bpmn:messageFlow id="MessageFlow_Angebot" name="Angebot" sourceRef="EndEvent_AngebotVersendet" targetRef="StartEvent_AngebotErhalten" />
+    <bpmn:messageFlow id="MessageFlow_Auftrag" name="Auftrag" sourceRef="EndEvent_AuftragErteilt" targetRef="StartEvent_AuftragErhalten" />
+    <bpmn:messageFlow id="MessageFlow_Ablehnung" name="Ablehnung" sourceRef="EndEvent_Abgelehnt" targetRef="StartEvent_AblehnungErhalten" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Thinkport" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Thinkport">
+      <bpmn:lane id="Lane_Sales" name="Sales">
+        <bpmn:flowNodeRef>StartEvent_Lead</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Qualifizieren</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Qualifiziert</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AngebotErstellen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AngebotVersenden</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_AngebotVersendet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_AuftragErhalten</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_VertragAufsetzen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Uebergabe</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_AblehnungErhalten</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_AuftragVerloren</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_Verworfen</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Delivery" name="Delivery">
+        <bpmn:flowNodeRef>Task_KickoffVorbereiten</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_ProjektGestartet</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_Lead" name="Lead eingegangen">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Qualifizieren" name="Lead qualifizieren">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Qualifiziert" name="Qualifiziert?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_AngebotErstellen" name="Angebot erstellen">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AngebotVersenden" name="Angebot versenden">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_AngebotVersendet" name="Angebot versendet">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1" />
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_AuftragErhalten" name="Auftrag erhalten">
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_2" />
+    </bpmn:startEvent>
+    <bpmn:task id="Task_VertragAufsetzen" name="Vertrag aufsetzen">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Uebergabe" name="An Delivery übergeben">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="StartEvent_AblehnungErhalten" name="Ablehnung erhalten">
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_3" />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_AuftragVerloren" name="Auftrag verloren">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Lead" targetRef="Task_Qualifizieren" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Qualifizieren" targetRef="Gateway_Qualifiziert" />
+    <bpmn:sequenceFlow id="Flow_3" name="Nein" sourceRef="Gateway_Qualifiziert" targetRef="EndEvent_Verworfen" />
+    <bpmn:sequenceFlow id="Flow_4" name="Ja" sourceRef="Gateway_Qualifiziert" targetRef="Task_AngebotErstellen" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_AngebotErstellen" targetRef="Task_AngebotVersenden" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_AngebotVersenden" targetRef="EndEvent_AngebotVersendet" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="StartEvent_AuftragErhalten" targetRef="Task_VertragAufsetzen" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_VertragAufsetzen" targetRef="Task_Uebergabe" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Uebergabe" targetRef="Task_KickoffVorbereiten" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_KickoffVorbereiten" targetRef="EndEvent_ProjektGestartet" />
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="StartEvent_AblehnungErhalten" targetRef="EndEvent_AuftragVerloren" />
+    <bpmn:task id="Task_KickoffVorbereiten" name="Kickoff vorbereiten">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_ProjektGestartet" name="Projekt gestartet">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_Verworfen" name="Lead verworfen">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:process id="Process_Kunde" isExecutable="false">
+    <bpmn:endEvent id="EndEvent_Abgelehnt" name="Angebot abgelehnt">
+      <bpmn:incoming>Flow_K3</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_5" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_K3" name="Nein" sourceRef="Gateway_Angenommen" targetRef="EndEvent_Abgelehnt" />
+    <bpmn:endEvent id="EndEvent_AuftragErteilt" name="Auftrag erteilt">
+      <bpmn:incoming>Flow_K4</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_6" />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_Angenommen" name="Angenommen?">
+      <bpmn:incoming>Flow_K2</bpmn:incoming>
+      <bpmn:outgoing>Flow_K3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_K4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_AngebotPruefen" name="Angebot prüfen">
+      <bpmn:incoming>Flow_K1</bpmn:incoming>
+      <bpmn:outgoing>Flow_K2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="StartEvent_AngebotErhalten" name="Angebot erhalten">
+      <bpmn:outgoing>Flow_K1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_4" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_K4" name="Ja" sourceRef="Gateway_Angenommen" targetRef="EndEvent_AuftragErteilt" />
+    <bpmn:sequenceFlow id="Flow_K2" sourceRef="Task_AngebotPruefen" targetRef="Gateway_Angenommen" />
+    <bpmn:sequenceFlow id="Flow_K1" sourceRef="StartEvent_AngebotErhalten" targetRef="Task_AngebotPruefen" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Sales">
+    <bpmndi:BPMNPlane id="BPMNPlane_Sales" bpmnElement="Collaboration_Sales">
+      <bpmndi:BPMNShape id="Participant_Thinkport_di" bpmnElement="Participant_Thinkport" isHorizontal="true">
+        <dc:Bounds x="150" y="50" width="1100" height="350" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Sales_di" bpmnElement="Lane_Sales" isHorizontal="true">
+        <dc:Bounds x="180" y="50" width="1070" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Delivery_di" bpmnElement="Lane_Delivery" isHorizontal="true">
+        <dc:Bounds x="180" y="270" width="1070" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_Lead_di" bpmnElement="StartEvent_Lead">
+        <dc:Bounds x="210" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="136" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Qualifizieren_di" bpmnElement="Task_Qualifizieren">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Qualifiziert_di" bpmnElement="Gateway_Qualifiziert" isMarkerVisible="true">
+        <dc:Bounds x="440" y="100" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="432" y="60" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AngebotErstellen_di" bpmnElement="Task_AngebotErstellen">
+        <dc:Bounds x="540" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AngebotVersenden_di" bpmnElement="Task_AngebotVersenden">
+        <dc:Bounds x="690" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_AngebotVersendet_di" bpmnElement="EndEvent_AngebotVersendet">
+        <dc:Bounds x="840" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="818" y="60" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_AuftragErhalten_di" bpmnElement="StartEvent_AuftragErhalten">
+        <dc:Bounds x="210" y="230" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="188" y="266" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_VertragAufsetzen_di" bpmnElement="Task_VertragAufsetzen">
+        <dc:Bounds x="290" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Uebergabe_di" bpmnElement="Task_Uebergabe">
+        <dc:Bounds x="430" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_AblehnungErhalten_di" bpmnElement="StartEvent_AblehnungErhalten">
+        <dc:Bounds x="620" y="230" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="598" y="266" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_AuftragVerloren_di" bpmnElement="EndEvent_AuftragVerloren">
+        <dc:Bounds x="700" y="230" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="678" y="266" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_KickoffVorbereiten_di" bpmnElement="Task_KickoffVorbereiten">
+        <dc:Bounds x="580" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_ProjektGestartet_di" bpmnElement="EndEvent_ProjektGestartet">
+        <dc:Bounds x="740" y="320" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="718" y="356" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Verworfen_di" bpmnElement="EndEvent_Verworfen">
+        <dc:Bounds x="447" y="190" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="226" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="246" y="118" />
+        <di:waypoint x="290" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="390" y="118" />
+        <di:waypoint x="440" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="465" y="150" />
+        <di:waypoint x="465" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="472" y="165" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="490" y="125" />
+        <di:waypoint x="540" y="118" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="505" y="105" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="640" y="118" />
+        <di:waypoint x="690" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="790" y="118" />
+        <di:waypoint x="840" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="246" y="248" />
+        <di:waypoint x="290" y="248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="390" y="248" />
+        <di:waypoint x="430" y="248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="480" y="290" />
+        <di:waypoint x="480" y="340" />
+        <di:waypoint x="580" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="680" y="340" />
+        <di:waypoint x="740" y="338" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
+        <di:waypoint x="656" y="248" />
+        <di:waypoint x="700" y="248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_Kunde_di" bpmnElement="Participant_Kunde" isHorizontal="true">
+        <dc:Bounds x="150" y="450" width="1100" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Abgelehnt_di" bpmnElement="EndEvent_Abgelehnt">
+        <dc:Bounds x="550" y="475" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="530" y="511" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_AuftragErteilt_di" bpmnElement="EndEvent_AuftragErteilt">
+        <dc:Bounds x="550" y="580" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="533" y="616" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Angenommen_di" bpmnElement="Gateway_Angenommen" isMarkerVisible="true">
+        <dc:Bounds x="440" y="505" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="430" y="565" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AngebotPruefen_di" bpmnElement="Task_AngebotPruefen">
+        <dc:Bounds x="290" y="485" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_AngebotErhalten_di" bpmnElement="StartEvent_AngebotErhalten">
+        <dc:Bounds x="210" y="505" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="188" y="541" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_K3_di" bpmnElement="Flow_K3">
+        <di:waypoint x="465" y="505" />
+        <di:waypoint x="465" y="493" />
+        <di:waypoint x="550" y="493" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="472" y="495" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_K4_di" bpmnElement="Flow_K4">
+        <di:waypoint x="465" y="555" />
+        <di:waypoint x="465" y="598" />
+        <di:waypoint x="550" y="598" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="472" y="573" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_K2_di" bpmnElement="Flow_K2">
+        <di:waypoint x="390" y="523" />
+        <di:waypoint x="440" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_K1_di" bpmnElement="Flow_K1">
+        <di:waypoint x="246" y="523" />
+        <di:waypoint x="290" y="523" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_Angebot_di" bpmnElement="MessageFlow_Angebot">
+        <di:waypoint x="858" y="136" />
+        <di:waypoint x="858" y="420" />
+        <di:waypoint x="228" y="420" />
+        <di:waypoint x="228" y="505" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="732" y="402" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_Auftrag_di" bpmnElement="MessageFlow_Auftrag">
+        <di:waypoint x="568" y="580" />
+        <di:waypoint x="568" y="430" />
+        <di:waypoint x="228" y="430" />
+        <di:waypoint x="228" y="266" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="377" y="412" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_Ablehnung_di" bpmnElement="MessageFlow_Ablehnung">
+        <di:waypoint x="568" y="475" />
+        <di:waypoint x="568" y="440" />
+        <di:waypoint x="638" y="440" />
+        <di:waypoint x="638" y="266" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="583" y="420" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
